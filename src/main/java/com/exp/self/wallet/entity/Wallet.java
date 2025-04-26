@@ -9,9 +9,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "wallet")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Wallet {
 
     @Id
