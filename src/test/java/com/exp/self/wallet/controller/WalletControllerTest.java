@@ -59,26 +59,6 @@ public class WalletControllerTest {
                 .andExpect(jsonPath("$.walletId").value(testWalletId.toString()))
                 .andExpect(jsonPath("$.balance").value(1000));
     }
-//    void deposit_ShouldReturnOK() throws Exception {
-//
-//        UUID testWalletId = UUID.randomUUID();
-//        WalletRequest request = new WalletRequest(testWalletId, OperationType.DEPOSIT, 1000L);
-//
-//
-//        Wallet mockWallet = new Wallet();
-//        mockWallet.setId(testWalletId);
-//        mockWallet.setBalance(1000L);
-//        when(walletService.deposit(testWalletId, 1000L)).thenReturn(mockWallet);
-//
-//        when(walletService.getBalance(testWalletId)).thenReturn(1000L);
-//
-//        mockMvc.perform(post("/api/v1/wallet")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.walletId").value(testWalletId.toString()))
-//                .andExpect(jsonPath("$.balance").value(1000));
-//    }
 
     @Test
     void getBalance_ShouldReturnNotFound() throws Exception {
