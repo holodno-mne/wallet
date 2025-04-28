@@ -7,7 +7,11 @@ import com.exp.self.wallet.service.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
+
+import static com.exp.self.wallet.dto.OperationType.DEPOSIT;
+import static com.exp.self.wallet.dto.OperationType.WITHDRAW;
 
 @RestController
 @RequestMapping("/api/v1/wallet")
@@ -22,18 +26,13 @@ public class WalletController {
     @PostMapping
     public ResponseEntity<WalletResponse> processOperation(@RequestBody WalletRequest request) {
 
-        switch (request.getType().name()) {
-            case "DEPOSIT":
-                walletService.deposit(request.getWalletId(), request.getAmount());
-                break;
-            case "WITHDRAW":
-                walletService.withdraw(request.getWalletId(), request.getAmount());
-                break;
-            default:
-                throw new InvalidOperationException(request.getType().name());
+        switch (request.getType()) {
+            case DEPOSIT -> walletService.deposit(request.getWalletId(), request.getAmount());
+            case WITHDRAW -> walletService.withdraw(request.getWalletId(), request.getAmount());
+            default -> throw new InvalidOperationException(request.getType());
         }
 
-        long newBalance = walletService.getBalance(request.getWalletId());
+        BigDecimal newBalance = walletService.getBalance(request.getWalletId());
 
         return ResponseEntity.ok(new WalletResponse(request.getWalletId(), newBalance));
     }
@@ -42,7 +41,7 @@ public class WalletController {
     public ResponseEntity<WalletResponse> getBalance(
             @PathVariable UUID walletId) {
 
-        long balance = walletService.getBalance(walletId);
+        BigDecimal balance = walletService.getBalance(walletId);
         return ResponseEntity.ok(
                 new WalletResponse(walletId, balance)
         );

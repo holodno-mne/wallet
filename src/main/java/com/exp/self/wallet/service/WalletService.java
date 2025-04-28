@@ -14,6 +14,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,19 +37,19 @@ public class WalletService {
             }
     )
     @Transactional
-    public Wallet deposit(UUID walletId, long amount) {
-        if (amount <= 0) {
+    public Wallet deposit(UUID walletId, BigDecimal amount) {
+        if (amount.signum() <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> new WalletNotFoundException(walletId));
 
-        wallet.setBalance(wallet.getBalance() + amount);
+        wallet.setBalance(amount.add(wallet.getBalance()));
         return walletRepository.save(wallet);
     }
 
     @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 100))
     @Transactional
-    public Wallet withdraw(UUID walletId, long amount) {
+    public Wallet withdraw(UUID walletId, BigDecimal amount) {
 
         Optional<Wallet> walletOpt = walletRepository.findByIdSkipLocked(walletId);
 
@@ -60,7 +61,7 @@ public class WalletService {
         if (!wallet.hasSufficientFounds(amount)) {
             throw new InsufficientFundsException(walletId, amount, wallet.getBalance());
         }
-        wallet.setBalance(wallet.getBalance() - amount);
+        wallet.setBalance(wallet.getBalance().subtract(amount));
         return walletRepository.save(wallet);
     }
 
@@ -68,7 +69,7 @@ public class WalletService {
         throw new ServiceUnavailableException("The service is temporarily unavailable. Try again later");
     }
 
-    public long getBalance(UUID walletId) {
+    public BigDecimal getBalance(UUID walletId) {
         return walletRepository.findById(walletId).orElseThrow(() -> new WalletNotFoundException(walletId)).getBalance();
     }
 

@@ -14,7 +14,7 @@
             <column name="ID" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="BALANCE" type="BIGINT">
+            <column name="BALANCE" type="NUMERIC">
                 <constraints nullable="false"/>
             </column>
             <column name="VERSION" type="BIGINT">

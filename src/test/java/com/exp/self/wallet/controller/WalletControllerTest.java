@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -50,11 +51,11 @@ public class WalletControllerTest {
     @Test
     void deposit_ShouldReturnOK() throws Exception {
         UUID testWalletId = UUID.randomUUID();
-        WalletRequest request = new WalletRequest(testWalletId, OperationType.DEPOSIT, 1000L);
+        WalletRequest request = new WalletRequest(testWalletId, OperationType.DEPOSIT, BigDecimal.valueOf(1000));
 
-        Wallet mockWallet = new Wallet(testWalletId, 1000L);
+        Wallet mockWallet = new Wallet(testWalletId, BigDecimal.valueOf(1000));
 
-        when(walletService.deposit(any(UUID.class), any(Long.class))).thenReturn(mockWallet);
+        when(walletService.deposit(any(UUID.class), any(BigDecimal.class))).thenReturn(mockWallet);
 
         mockMvc.perform(post("/api/v1/wallet")
                         .contentType(MediaType.APPLICATION_JSON)

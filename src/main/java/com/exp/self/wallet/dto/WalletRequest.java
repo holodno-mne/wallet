@@ -2,13 +2,14 @@ package com.exp.self.wallet.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
 public class WalletRequest {
     private UUID walletId;
     private OperationType type;
-    private long amount;
+    private BigDecimal amount;
 
     public UUID getWalletId() {
         return walletId;
@@ -18,11 +19,11 @@ public class WalletRequest {
         return type;
     }
 
-    public long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public WalletRequest(UUID walletId, OperationType type, long amount) {
+    public WalletRequest(UUID walletId, OperationType type, BigDecimal amount) {
         this.walletId = walletId;
         this.type = type;
         this.amount = amount;

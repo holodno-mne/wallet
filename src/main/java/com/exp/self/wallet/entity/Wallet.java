@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -16,27 +17,27 @@ public class Wallet {
     private UUID id;
 
     @Column(name = "BALANCE", nullable = false)
-    private long balance;
+    private BigDecimal balance;
 
     @Version
     private long version;
 
     public Wallet() {}
 
-    public Wallet(UUID id, long balance) {
+    public Wallet(UUID id, BigDecimal balance) {
         this.id = id;
         this.balance = balance;
     }
 
-    public boolean hasSufficientFounds(long amount) {
-        return balance >= amount;
+    public boolean hasSufficientFounds(BigDecimal amount) {
+        return balance.compareTo(amount) >= 0;
     }
 
-    public Long getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Long balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

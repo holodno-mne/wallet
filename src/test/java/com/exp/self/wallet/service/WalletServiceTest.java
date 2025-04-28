@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,10 +28,10 @@ class WalletServiceTest {
 
     @Test
     void deposit_ShouldIncreaseBalance() {
-        Wallet wallet = new Wallet(walletId, 500L);
+        Wallet wallet = new Wallet(walletId, BigDecimal.valueOf(500));
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
 
-        walletService.deposit(walletId, 300L);
+        walletService.deposit(walletId, BigDecimal.valueOf(300));
 
         assertEquals(800L, wallet.getBalance());
         verify(walletRepository).save(wallet);
@@ -37,10 +39,10 @@ class WalletServiceTest {
 
     @Test
     void withdraw_ShouldThrowException_IfInsufficientFunds() {
-        Wallet wallet = new Wallet(walletId, 200L);
+        Wallet wallet = new Wallet(walletId, BigDecimal.valueOf(200));
         when(walletRepository.findByIdForUpdate(walletId)).thenReturn(Optional.of(wallet));
 
         assertThrows(InsufficientFundsException.class, () ->
-                walletService.withdraw(walletId, 300L));
+                walletService.withdraw(walletId, BigDecimal.valueOf(300)));
     }
 }
